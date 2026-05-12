@@ -1,0 +1,203 @@
+:root {
+  /* Color Palette */
+  --color-bg-primary: #F8F4EC; /* Warm temple ivory */
+  --color-bg-secondary: #FFFFFF;
+  --color-accent-primary: #C66A2B; /* Sacred saffron */
+  --color-accent-primary-hover: #B55F25;
+  --color-accent-secondary: #8B1E1E; /* Deep maroon */
+  --color-accent-premium: #C9A227; /* Muted gold */
+  
+  /* Text Colors */
+  --color-text-primary: #1F1F1F; /* Dark charcoal */
+  --color-text-secondary: #5F5F5F; /* Muted gray */
+  --color-text-light: #FFFFFF;
+
+  /* Typography */
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Layout Variables */
+  --max-width: 1280px;
+  --spacing-section-desktop: 100px;
+  --spacing-section-tablet: 80px;
+  --spacing-section-mobile: 60px;
+
+  /* Shadows & Borders */
+  --shadow-soft: 0 10px 30px rgba(31, 31, 31, 0.05);
+  --shadow-hover: 0 15px 40px rgba(31, 31, 31, 0.08);
+  --border-radius: 12px;
+  --border-radius-lg: 24px;
+  
+  /* Transitions */
+  --transition-smooth: all 0.3s ease-in-out;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: var(--font-body);
+  border: none;
+  cursor: pointer;
+  background: none;
+}
+
+/* Base Layout Classes */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 40px; /* Wider padding on desktop for better breathing room */
+}
+
+.section {
+  padding: var(--spacing-section-desktop) 0;
+  position: relative; /* For background textures if needed */
+}
+
+@media (max-width: 992px) {
+  .container {
+    padding: 0 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: var(--spacing-section-tablet) 0;
+  }
+  .container {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .section {
+    padding: var(--spacing-section-mobile) 0;
+  }
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* Animations */
+.fade-in {
+  animation: fadeIn 0.8s ease-in-out forwards;
+  opacity: 0;
+}
+
+.slide-up {
+  animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Global Utility Classes */
+.btn-primary {
+  background-color: var(--color-accent-primary);
+  color: var(--color-text-light);
+  padding: 16px 32px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  font-size: 16px;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-accent-primary);
+  border: 1.5px solid var(--color-accent-primary);
+  padding: 16px 32px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  font-size: 16px;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(198, 106, 43, 0.05); /* Subtle hover instead of full fill */
+  color: var(--color-accent-primary);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .btn-primary, .btn-secondary {
+    padding: 14px 24px;
+    font-size: 15px;
+    width: 100%;
+  }
+}
+
+.card {
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-soft);
+  padding: 32px;
+  transition: var(--transition-smooth);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-4px);
+}

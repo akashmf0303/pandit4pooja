@@ -1,0 +1,184 @@
+.service-page {
+  min-height: 100vh;
+  background-color: var(--color-bg-primary);
+  padding-bottom: 100px;
+}
+
+/* Base Hero Styling */
+.service-hero {
+  padding: 120px 20px 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.service-subtitle {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.service-hero h1 {
+  font-family: var(--font-heading);
+  font-size: 56px;
+  line-height: 1.1;
+  color: var(--color-accent-secondary);
+  margin-bottom: 24px;
+}
+
+.service-hero .lead {
+  font-size: 20px;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin-bottom: 40px;
+}
+
+/* Service Grids */
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 32px;
+  margin-top: 64px;
+}
+
+/* Feature/Benefit Blocks */
+.feature-block {
+  padding: 80px 20px;
+  background: white;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  text-align: center;
+  padding: 40px 24px;
+  background: var(--color-bg-primary);
+  border-radius: 20px;
+  border: 1px solid rgba(224, 110, 56, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+}
+
+.feature-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-card h3 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--color-accent-secondary);
+  margin-bottom: 16px;
+}
+
+.feature-card p {
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+/* Specific Page Themes */
+
+/* Pooja at Home */
+.theme-home .service-hero {
+  background: linear-gradient(180deg, #faf9f7 0%, #fff 100%);
+}
+.theme-home .service-subtitle {
+  color: #8B4513; /* Earthy brown */
+}
+
+/* Online Pooja */
+.theme-online .service-hero {
+  background: linear-gradient(180deg, #f0f7f9 0%, #fff 100%);
+}
+.theme-online .service-subtitle {
+  color: #2b6cb0; /* Tech/Global Blue */
+}
+.theme-online .feature-icon {
+  background: rgba(43, 108, 176, 0.1);
+  color: #2b6cb0;
+}
+
+/* Festival Poojas */
+.theme-festival .service-hero {
+  background: linear-gradient(180deg, #fff0e6 0%, #fff 100%);
+}
+.theme-festival .service-subtitle {
+  color: #e53e3e; /* Festive Red */
+}
+.theme-festival .feature-icon {
+  background: rgba(229, 62, 62, 0.1);
+  color: #e53e3e;
+}
+.theme-festival h1 {
+  color: #c53030;
+}
+
+/* Astrology Consultation */
+.theme-astrology .service-hero {
+  background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%);
+}
+.theme-astrology .service-subtitle {
+  color: #f6ad55; /* Celestial Gold */
+}
+.theme-astrology h1 {
+  color: #fff;
+}
+.theme-astrology .lead {
+  color: #a0aec0;
+}
+.theme-astrology .feature-block {
+  background: #1a202c;
+}
+.theme-astrology .feature-card {
+  background: rgba(255,255,255,0.02);
+  border-color: rgba(255,255,255,0.05);
+}
+.theme-astrology .feature-card h3 {
+  color: #fff;
+}
+.theme-astrology .feature-card p {
+  color: #a0aec0;
+}
+.theme-astrology .feature-icon {
+  background: rgba(246, 173, 85, 0.1);
+  color: #f6ad55;
+}
+
+@media (max-width: 992px) {
+  .feature-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .service-hero h1 {
+    font-size: 40px;
+  }
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,867 @@
+/* Global Home Page Styles */
+.home-page {
+  overflow-x: hidden;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 64px;
+}
+
+.section-title {
+  font-size: 44px;
+  color: var(--color-accent-secondary);
+  margin-bottom: 16px;
+  position: relative;
+  display: inline-block;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 3px;
+  background-color: var(--color-accent-primary);
+}
+
+.section-subtitle {
+  font-size: 18px;
+  color: var(--color-text-secondary);
+  font-weight: 300;
+  margin-top: 24px;
+}
+
+/* 1. Hero Section */
+.hero-section {
+  position: relative;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  margin-top: -80px; /* Offset for sticky navbar */
+  padding-top: 80px;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+
+.hero-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-img-zoom {
+  animation: subtleZoom 20s ease-in-out infinite alternate;
+}
+
+@keyframes subtleZoom {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(26, 15, 10, 0.95) 0%, rgba(26, 15, 10, 0.75) 45%, rgba(26, 15, 10, 0.1) 100%);
+  z-index: -1;
+}
+
+/* Subtle spiritual texture overlay */
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-content {
+  max-width: 800px;
+  color: var(--color-text-light);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-content h1 {
+  font-size: 64px;
+  color: #fff;
+  margin-bottom: 24px;
+  line-height: 1.1;
+  text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  font-weight: 500;
+  letter-spacing: -0.5px;
+}
+
+.hero-content p {
+  font-size: 20px;
+  margin-bottom: 40px;
+  opacity: 0.95;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.hero-buttons .btn-primary {
+  background-color: var(--color-accent-primary);
+  border: 1.5px solid var(--color-accent-primary);
+}
+
+.hero-buttons .btn-secondary {
+  color: var(--color-text-light);
+  border: 1.5px solid rgba(255,255,255,0.7);
+  background-color: transparent;
+}
+
+.hero-buttons .btn-secondary:hover {
+  background-color: rgba(255,255,255,0.15);
+  border-color: var(--color-text-light);
+}
+
+/* 2. Trust Indicators Section */
+.trust-bar {
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid rgba(198, 106, 43, 0.1);
+  padding: 40px 0;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  z-index: 10;
+  margin-top: -40px;
+  border-radius: var(--border-radius);
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  text-align: center;
+}
+
+.trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.trust-icon {
+  color: var(--color-accent-primary);
+  margin-bottom: 16px;
+}
+
+.trust-item h4 {
+  font-family: var(--font-body);
+  font-size: 16px;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.trust-item p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* 3. Featured Poojas Section */
+.pooja-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.pooja-card {
+  background: var(--color-bg-secondary);
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.pooja-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
+}
+
+.pooja-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+
+.pooja-image-wrapper img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+
+.pooja-card:hover .pooja-image-wrapper img {
+  transform: scale(1.05);
+}
+
+.pooja-content {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.pooja-content h3 {
+  font-size: 24px;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.pooja-content p {
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  margin-bottom: 24px;
+  flex-grow: 1;
+}
+
+.pooja-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.pooja-price {
+  font-weight: 600;
+  color: var(--color-accent-secondary);
+  font-size: 18px;
+}
+
+.pooja-price span {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+}
+
+.pooja-card .btn-secondary {
+  width: 100%;
+}
+
+/* 4. Why Choose Us Section */
+.why-us-section {
+  background-color: var(--color-bg-secondary);
+}
+
+.why-us-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px 32px;
+}
+
+.why-us-item {
+  display: flex;
+  gap: 24px;
+}
+
+.why-us-icon-wrapper {
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  background-color: rgba(201, 162, 39, 0.1);
+  color: var(--color-accent-premium);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.why-us-text h4 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--color-text-primary);
+}
+
+.why-us-text p {
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* 5. How Booking Works Section */
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  position: relative;
+}
+
+.workflow-grid::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background-color: rgba(198, 106, 43, 0.2);
+  z-index: 0;
+}
+
+.workflow-step {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 0 16px;
+}
+
+.step-number {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 24px;
+  background-color: var(--color-bg-primary);
+  border: 2px solid var(--color-accent-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 32px;
+  color: var(--color-accent-primary);
+  font-weight: 700;
+  box-shadow: 0 0 0 10px var(--color-bg-primary);
+}
+
+.workflow-step h4 {
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+
+.workflow-step p {
+  color: var(--color-text-secondary);
+  font-size: 15px;
+}
+
+/* 6. Online Pooja / NRI Section */
+.nri-section {
+  background: linear-gradient(to right, #FAF8F5, var(--color-bg-primary));
+}
+
+.nri-content-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+}
+
+.nri-text {
+  flex: 1;
+}
+
+.nri-text h2 {
+  font-size: 40px;
+  color: var(--color-accent-secondary);
+  margin-bottom: 24px;
+}
+
+.nri-text p {
+  font-size: 18px;
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+  line-height: 1.7;
+}
+
+.nri-features {
+  list-style: none;
+  margin-bottom: 40px;
+}
+
+.nri-features li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  color: var(--color-text-primary);
+}
+
+.nri-features .icon {
+  color: var(--color-accent-primary);
+}
+
+.nri-image {
+  flex: 1;
+  position: relative;
+}
+
+.nri-image img {
+  width: 100%;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.nri-image::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--color-accent-premium);
+  border-radius: var(--border-radius-lg);
+  z-index: -1;
+}
+
+/* 7. Meet Our Pandit Section */
+.single-pandit-profile {
+  display: flex;
+  align-items: center;
+  gap: 64px;
+  background-color: var(--color-bg-primary);
+  border-radius: var(--border-radius-lg);
+  padding: 48px;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+.single-pandit-profile::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(198, 106, 43, 0.03) 0%, rgba(255,255,255,0) 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.pandit-portrait {
+  flex: 1;
+  position: relative;
+  z-index: 1;
+}
+
+.pandit-portrait img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-hover);
+  border: 4px solid var(--color-bg-secondary);
+}
+
+.pandit-name-tag {
+  position: absolute;
+  bottom: 32px;
+  left: -24px;
+  background-color: var(--color-bg-secondary);
+  padding: 16px 32px;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-hover);
+  border-left: 4px solid var(--color-accent-primary);
+}
+
+.pandit-name-tag h3 {
+  font-size: 24px;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+
+.pandit-name-tag span {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.pandit-bio {
+  flex: 1.5;
+  position: relative;
+  z-index: 1;
+}
+
+.bio-lead {
+  font-size: 20px;
+  color: var(--color-text-primary);
+  line-height: 1.7;
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+
+.bio-sub {
+  font-size: 18px;
+  color: var(--color-text-secondary);
+  font-style: italic;
+  border-left: 2px solid rgba(198, 106, 43, 0.3);
+  padding-left: 16px;
+  margin-top: 24px;
+}
+
+/* 8. Cities We Serve */
+.cities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.city-card {
+  position: relative;
+  height: 300px;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  padding: 32px;
+  color: var(--color-text-light);
+  text-decoration: none;
+}
+
+.city-card img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  transition: transform 0.5s ease;
+}
+
+.city-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+  z-index: 1;
+}
+
+.city-card:hover img {
+  transform: scale(1.05);
+}
+
+.city-content {
+  position: relative;
+  z-index: 2;
+}
+
+.city-content h3 {
+  color: white;
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.city-content span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.8);
+}
+
+/* 9. Testimonials */
+.testimonials-section {
+  background-color: var(--color-bg-secondary);
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.testimonial-card {
+  background-color: var(--color-bg-primary);
+  padding: 40px 32px;
+  border-radius: var(--border-radius);
+  position: relative;
+}
+
+.quote-icon {
+  color: rgba(201, 162, 39, 0.2);
+  position: absolute;
+  top: 24px;
+  right: 32px;
+}
+
+.stars {
+  display: flex;
+  gap: 4px;
+  color: var(--color-accent-premium);
+  margin-bottom: 24px;
+}
+
+.testimonial-text {
+  font-size: 16px;
+  color: var(--color-text-primary);
+  line-height: 1.7;
+  font-style: italic;
+  margin-bottom: 24px;
+}
+
+.testimonial-author h4 {
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.testimonial-author p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* 10. FAQ Section */
+.faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  margin-bottom: 16px;
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  text-align: left;
+}
+
+.faq-answer {
+  padding-bottom: 24px;
+  color: var(--color-text-secondary);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* 11. Final CTA Section */
+.final-cta {
+  background: linear-gradient(135deg, var(--color-accent-secondary) 0%, #4A1010 100%);
+  padding: 100px 0;
+  text-align: center;
+  color: var(--color-text-light);
+  position: relative;
+}
+
+.final-cta::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://images.unsplash.com/photo-1596700722137-0cfc677f50a4?q=80&w=2070&auto=format&fit=crop') center/cover;
+  opacity: 0.05;
+}
+
+.final-cta-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.final-cta h2 {
+  color: white;
+  font-size: 48px;
+  margin-bottom: 24px;
+}
+
+.final-cta p {
+  font-size: 20px;
+  opacity: 0.9;
+  margin-bottom: 48px;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  .pooja-grid, .why-us-grid, .cities-grid, .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .single-pandit-profile {
+    flex-direction: column;
+    padding: 32px;
+    gap: 40px;
+  }
+  
+  .pandit-name-tag {
+    left: 24px;
+  }
+  .hero-content h1 {
+    font-size: 56px;
+  }
+  
+  .section-title {
+    font-size: 36px;
+  }
+  
+  .trust-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px 16px;
+  }
+  
+  .workflow-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 48px;
+  }
+  
+  .workflow-grid::before {
+    display: none;
+  }
+  
+  .nri-content-wrapper {
+    flex-direction: column;
+    gap: 40px;
+  }
+  
+  .nri-image {
+    order: -1;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    margin-bottom: 40px;
+  }
+  
+  .section-title {
+    font-size: 32px;
+  }
+  
+  .section-subtitle {
+    font-size: 16px;
+    margin-top: 16px;
+  }
+
+  .hero-content h1 {
+    font-size: 44px;
+    line-height: 1.2;
+  }
+  
+  .hero-content p {
+    font-size: 18px;
+    margin-bottom: 32px;
+  }
+  
+  .hero-buttons {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .hero-buttons .btn-primary, .hero-buttons .btn-secondary {
+    width: 100%;
+  }
+  
+  .trust-bar {
+    margin-top: -24px;
+    border-radius: var(--border-radius);
+    margin-left: 16px;
+    margin-right: 16px;
+    padding: 32px 0;
+  }
+  
+  .pooja-grid, .why-us-grid, .cities-grid, .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .single-pandit-profile {
+    padding: 24px 16px;
+  }
+  
+  .pandit-name-tag {
+    left: 16px;
+    bottom: 16px;
+    padding: 12px 24px;
+  }
+  
+  .pandit-portrait img {
+    height: 350px;
+  }
+  
+  .workflow-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .final-cta {
+    padding: 64px 24px;
+  }
+  
+  .final-cta h2 {
+    font-size: 32px;
+  }
+  
+  .final-cta p {
+    font-size: 16px;
+    margin-bottom: 32px;
+  }
+  
+  .final-cta-content > div {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 36px;
+  }
+  
+  .section-title {
+    font-size: 28px;
+  }
+  
+  .trust-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .why-us-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+}

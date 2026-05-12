@@ -1,0 +1,231 @@
+.booking-container {
+  min-height: 80vh;
+  padding: 120px 20px 80px;
+  background-color: var(--color-bg-primary);
+}
+
+.booking-header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.booking-header h1 {
+  font-family: var(--font-heading);
+  color: var(--color-accent-secondary);
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+.booking-progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto 48px;
+  position: relative;
+}
+
+.booking-progress::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: rgba(110, 38, 14, 0.1);
+  z-index: 1;
+  transform: translateY(-50%);
+}
+
+.progress-step {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-bg-primary);
+  padding: 0 10px;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: white;
+  border: 2px solid rgba(110, 38, 14, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  transition: all 0.3s ease;
+}
+
+.progress-step.active .step-circle {
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-accent-primary);
+  color: white;
+  box-shadow: 0 0 0 4px rgba(224, 110, 56, 0.2);
+}
+
+.progress-step.completed .step-circle {
+  border-color: var(--color-accent-primary);
+  background-color: white;
+  color: var(--color-accent-primary);
+}
+
+.step-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.progress-step.active .step-label {
+  color: var(--color-accent-secondary);
+  font-weight: 600;
+}
+
+.booking-card {
+  background: white;
+  max-width: 800px;
+  margin: 0 auto;
+  border-radius: 24px;
+  padding: 48px;
+  box-shadow: 0 20px 40px rgba(110, 38, 14, 0.05);
+}
+
+.booking-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid rgba(110, 38, 14, 0.1);
+}
+
+/* Specific Step Styles */
+.pooja-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.pooja-select-card {
+  border: 2px solid rgba(110, 38, 14, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.pooja-select-card:hover {
+  border-color: rgba(224, 110, 56, 0.4);
+  transform: translateY(-2px);
+}
+
+.pooja-select-card.selected {
+  border-color: var(--color-accent-primary);
+  background-color: rgba(224, 110, 56, 0.05);
+}
+
+.pooja-select-card h4 {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.pooja-select-card p {
+  color: var(--color-accent-primary);
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Radio Group styling for preferences */
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid rgba(110, 38, 14, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.radio-option:hover {
+  background-color: #faf9f7;
+}
+
+.radio-option.selected {
+  border-color: var(--color-accent-primary);
+  background-color: rgba(224, 110, 56, 0.02);
+}
+
+.radio-option input[type="radio"] {
+  accent-color: var(--color-accent-primary);
+  width: 18px;
+  height: 18px;
+}
+
+/* Review Summary */
+.review-summary {
+  background-color: #faf9f7;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.review-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.review-row:last-child {
+  border-bottom: none;
+}
+
+.review-label {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.review-value {
+  font-weight: 500;
+  color: var(--color-accent-secondary);
+  text-align: right;
+  max-width: 60%;
+}
+
+.success-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+@media (max-width: 768px) {
+  .step-label {
+    display: none;
+  }
+  .booking-card {
+    padding: 32px 20px;
+  }
+}

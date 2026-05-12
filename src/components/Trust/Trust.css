@@ -1,0 +1,281 @@
+/* Trust & Authority Ecosystem CSS */
+
+.trust-section-bg {
+  background-color: #fdfcfaf;
+  background-image: linear-gradient(180deg, #ffffff 0%, #faf9f7 100%);
+  padding: 100px 20px;
+}
+
+.trust-section-dark {
+  background-color: var(--color-accent-secondary);
+  color: white;
+  padding: 100px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Meet Your Pandit */
+.meet-pandit-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pandit-image-wrapper {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(110, 38, 14, 0.15);
+}
+
+.pandit-image-wrapper::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+  border-radius: 24px;
+  pointer-events: none;
+}
+
+.pandit-image {
+  width: 100%;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  display: block;
+}
+
+.video-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+
+.video-play-overlay:hover {
+  background: rgba(0,0,0,0.3);
+}
+
+.video-play-btn {
+  width: 80px;
+  height: 80px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent-secondary);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+
+.video-play-overlay:hover .video-play-btn {
+  transform: scale(1.05);
+}
+
+.pandit-content h2 {
+  font-family: var(--font-heading);
+  font-size: 42px;
+  color: var(--color-accent-secondary);
+  margin-bottom: 8px;
+  line-height: 1.1;
+}
+
+.pandit-title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  color: var(--color-accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.pandit-quote {
+  font-size: 24px;
+  line-height: 1.5;
+  color: #333;
+  margin-bottom: 24px;
+  font-style: italic;
+  font-family: var(--font-heading);
+}
+
+.pandit-bio {
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--color-text-secondary);
+  margin-bottom: 32px;
+}
+
+.pandit-credentials {
+  display: flex;
+  gap: 24px;
+  border-top: 1px solid rgba(110, 38, 14, 0.1);
+  padding-top: 24px;
+}
+
+.cred-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cred-value {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  color: var(--color-accent-secondary);
+}
+
+.cred-label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Trust Pillars */
+.trust-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  max-width: 1200px;
+  margin: 64px auto 0;
+}
+
+.trust-pillar-card {
+  background: white;
+  padding: 40px 32px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(110, 38, 14, 0.03);
+  border: 1px solid rgba(110, 38, 14, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.trust-pillar-card:hover {
+  transform: translateY(-5px);
+}
+
+.trust-icon-wrapper {
+  width: 64px;
+  height: 64px;
+  background: #fff8f5;
+  color: var(--color-accent-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.trust-pillar-card h3 {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  color: var(--color-accent-secondary);
+  margin-bottom: 12px;
+}
+
+.trust-pillar-card p {
+  color: var(--color-text-secondary);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* Social Proof */
+.social-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.edu-card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 40px;
+  border-radius: 20px;
+  color: white;
+}
+
+.edu-stars {
+  color: #f59e0b;
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.edu-text {
+  font-size: 18px;
+  line-height: 1.6;
+  font-family: var(--font-heading);
+  font-style: italic;
+  margin-bottom: 24px;
+  color: rgba(255,255,255,0.9);
+}
+
+.testimonial-author {
+  font-weight: 600;
+  font-size: 16px;
+  color: white;
+}
+
+.testimonial-ritual {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  margin-top: 4px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 1024px) {
+  .meet-pandit-container {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+  
+  .pandit-image-wrapper {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  .trust-pillars-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .trust-section-bg, .trust-section-dark {
+    padding: 64px 20px;
+  }
+  
+  .pandit-content h2 {
+    font-size: 32px;
+  }
+  
+  .pandit-quote {
+    font-size: 20px;
+  }
+  
+  .trust-pillars-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .trust-pillar-card {
+    padding: 32px 24px;
+  }
+  
+  .edu-card {
+    padding: 32px 24px;
+  }
+  
+  .edu-text {
+    font-size: 16px;
+  }
+}
