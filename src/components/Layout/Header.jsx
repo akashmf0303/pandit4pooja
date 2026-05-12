@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+<<<<<<< HEAD
 import { Menu, X, Flame, LogOut, User } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+=======
+import { Menu, X, Flame } from 'lucide-react';
+>>>>>>> f15c08f954c540ec431eac2872b7575068031edc
 
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
+<<<<<<< HEAD
     const { user, profile, signOut } = useAuth();
+=======
+>>>>>>> f15c08f954c540ec431eac2872b7575068031edc
 
     useEffect(() => {
         const handleScroll = () => {
@@ -83,6 +90,7 @@ const Header = () => {
                             )}
                         </Link>
                     ))}
+<<<<<<< HEAD
                     
                     {user ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -106,6 +114,11 @@ const Header = () => {
                             </Link>
                         </div>
                     )}
+=======
+                    <Link to="/book" className="btn btn-primary" style={{ padding: '0.6rem 1.5rem', fontSize: '0.9rem' }}>
+                        Book a Puja
+                    </Link>
+>>>>>>> f15c08f954c540ec431eac2872b7575068031edc
                 </nav>
 
                 {/* Mobile Menu Button */}
@@ -148,6 +161,7 @@ const Header = () => {
                             {link.name}
                         </Link>
                     ))}
+<<<<<<< HEAD
                     {user ? (
                         <>
                             <Link to={profile?.role === 'admin' ? '/admin' : '/dashboard'} onClick={() => setIsMenuOpen(false)} style={{ padding: '0.75rem', fontWeight: 500, color: 'var(--color-text-main)', borderBottom: '1px solid var(--color-border-gold)' }}>
@@ -162,6 +176,8 @@ const Header = () => {
                             Login / Sign Up
                         </Link>
                     )}
+=======
+>>>>>>> f15c08f954c540ec431eac2872b7575068031edc
                     <Link
                         to="/book"
                         className="btn btn-primary"
