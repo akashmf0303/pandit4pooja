@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
@@ -105,7 +104,6 @@ const App = () => {
     </BrowserRouter>
   );
 };
-=======
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout/Layout';
 import Home from './pages/Home';
@@ -155,6 +153,5 @@ function App() {
     </Router>
   );
 }
->>>>>>> f15c08f954c540ec431eac2872b7575068031edc
 
 export default App;
