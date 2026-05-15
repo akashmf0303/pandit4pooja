@@ -18,7 +18,7 @@ import {
 import './Admin.css';
 
 const AdminLayout = () => {
-  const { signOut, user, profile } = useAuth();
+  const { signOut, user, profile, isSuperAdmin } = useAuth();
   const navigate = useNavigate();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -80,8 +80,21 @@ const AdminLayout = () => {
               {(profile?.full_name || user?.user_metadata?.full_name || 'A').charAt(0)}
             </div>
             <div>
-              <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--admin-text-primary)' }}>{profile?.full_name || user?.user_metadata?.full_name || 'Admin'}</div>
-              <div style={{ fontSize: '12px', color: 'var(--admin-text-secondary)' }}>Super Admin</div>
+              <div style={{ fontSize: '14px', fontWeight: '600', color: 'var(--admin-text-primary)', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                {profile?.full_name || user?.user_metadata?.full_name || 'Admin'}
+              </div>
+              <div style={{ 
+                fontSize: '11px', 
+                color: isSuperAdmin ? '#fff' : 'var(--admin-text-secondary)',
+                backgroundColor: isSuperAdmin ? 'var(--admin-accent)' : 'rgba(0,0,0,0.05)',
+                padding: '2px 8px',
+                borderRadius: '12px',
+                display: 'inline-block',
+                marginTop: '4px',
+                fontWeight: isSuperAdmin ? '600' : '500'
+              }}>
+                {isSuperAdmin ? 'Super Admin' : 'Admin'}
+              </div>
             </div>
           </div>
           <button onClick={handleLogout} className="btn-admin-outline" style={{ width: '100%', justifyContent: 'center' }}>

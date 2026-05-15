@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import './Auth.css';
@@ -9,30 +9,77 @@ const Signup = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { signUp, signInWithGoogle, user, profile } = useAuth();
+  const [verificationSent, setVerificationSent] = useState(false);
+  const { signUp, signInWithGoogle, resendVerificationEmail, user, profile } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (user && profile) {
-      if (profile.role === 'admin') {
-        navigate('/admin', { replace: true });
-      } else {
-        navigate('/', { replace: true });
-      }
+  const handleResend = async () => {
+    setIsSubmitting(true);
+    await resendVerificationEmail(email);
+    setIsSubmitting(false);
+  };
+
+  if (user && profile) {
+    if (profile.role === 'admin' || profile.role === 'super_admin') {
+      return <Navigate to="/admin" replace />;
+    } else {
+      return <Navigate to="/dashboard" replace />;
     }
-  }, [user, profile, navigate]);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password || !fullName) return;
     
     setIsSubmitting(true);
-    const { error } = await signUp(email, password, fullName);
+    const { error, needsVerification } = await signUp(email, password, fullName);
     setIsSubmitting(false);
+    
+    if (!error && needsVerification) {
+      setVerificationSent(true);
+    }
     
     // Note: Navigation is now handled by the useEffect above
     // so we wait for the profile to load before redirecting.
   };
+
+  if (verificationSent) {
+    return (
+      <div className="auth-page slide-up">
+        <div className="auth-container">
+          <div className="auth-header">
+            <h1>Check Your Email</h1>
+            <p>We've sent a verification link to <strong>{email}</strong></p>
+          </div>
+          
+          <div style={{ textAlign: 'center', padding: '32px 0' }}>
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent-primary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '24px' }}>
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            <p style={{ color: 'var(--color-text-secondary)', marginBottom: '24px', lineHeight: '1.6' }}>
+              Please click the link in the email to verify your account. You will not be able to log in until your email is verified.
+            </p>
+            <button 
+              className="btn-primary" 
+              onClick={() => navigate('/login')}
+              style={{ width: '100%', justifyContent: 'center', marginBottom: '16px' }}
+            >
+              Go to Login
+            </button>
+            <button 
+              className="btn-secondary" 
+              onClick={handleResend}
+              disabled={isSubmitting}
+              style={{ width: '100%', justifyContent: 'center' }}
+            >
+              {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : 'Resend Email'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="auth-page slide-up">

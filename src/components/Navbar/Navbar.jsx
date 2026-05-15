@@ -92,7 +92,7 @@ const Navbar = () => {
           {/* Mobile Only Login/CTA inside drawer */}
           <div className="mobile-only-actions">
             {user ? (
-              <button onClick={() => navigate(profile?.role === 'admin' ? '/admin' : '/dashboard')} className="btn-outline mobile-btn">
+              <button onClick={() => navigate((profile?.role === 'admin' || profile?.role === 'super_admin') ? '/admin' : '/dashboard')} className="btn-outline mobile-btn">
                 <User size={18} /> {profile?.full_name || user?.user_metadata?.full_name || 'Dashboard'}
               </button>
             ) : (
@@ -110,7 +110,7 @@ const Navbar = () => {
         <div className="navbar-actions">
           <div className="desktop-only-actions">
             {user ? (
-              <button onClick={() => navigate(profile?.role === 'admin' ? '/admin' : '/dashboard')} className="btn-outline login-btn">
+              <button onClick={() => navigate((profile?.role === 'admin' || profile?.role === 'super_admin') ? '/admin' : '/dashboard')} className="btn-outline login-btn">
                 <User size={18} />
                 <span>{(profile?.full_name || user?.user_metadata?.full_name || 'Dashboard').split(' ')[0]}</span>
               </button>

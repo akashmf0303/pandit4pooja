@@ -35,19 +35,19 @@ const Home = () => {
   const faqs = [
     {
       question: "Are the pandits verified?",
-      answer: "We focus on quality, not quantity. We do not operate a massive marketplace of random pandits. Every pooja is personally overseen by Acharya Ankush Shukla, ensuring that the person visiting your home has been personally vetted for pure intent and scriptural accuracy."
+      answer: "Yes. All our pandits are experienced, background-verified, and trained in authentic Vedic rituals and traditions."
     },
     {
       question: "Do you provide all the necessary Pooja Samagri?",
-      answer: "Yes, we handle the samagri completely. We source 100% pure, unadulterated materials so your family does not have to stress about running to local markets. We ensure the energetic quality of the offerings is perfect."
+      answer: "Yes. We can arrange complete pooja samagri based on the ritual requirements, so you don’t have to worry about preparations."
     },
     {
       question: "How does the Online e-Pooja work for NRIs?",
-      answer: "Our Online e-Pooja is conducted via a high-quality video link. A dedicated Pandit performs the ritual at our sacred center on your behalf, guiding you step-by-step to participate virtually from anywhere in the world."
+      answer: "NRIs can book poojas online and participate live through video call. Our pandits perform the rituals on your behalf with full sankalp and guidance."
     },
     {
       question: "Can I consult a Pandit before booking?",
-      answer: "Yes, we highly encourage a free preliminary consultation. You can talk to our experts via WhatsApp or phone to determine the right Pooja, auspicious Muhurat, and specific requirements for your family."
+      answer: "Absolutely. You can consult with our pandits before booking to understand the ritual, requirements, muhurat, and process."
     }
   ];
 
@@ -202,7 +202,7 @@ const Home = () => {
 
           <div className="faq-container slide-up">
             {faqs.map((faq, index) => (
-              <div className="faq-item" key={index}>
+              <div className={`faq-item ${openFaq === index ? 'active' : ''}`} key={index}>
                 <button 
                   className="faq-question" 
                   onClick={() => toggleFaq(index)}
@@ -212,7 +212,7 @@ const Home = () => {
                   {openFaq === index ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                 </button>
                 {openFaq === index && (
-                  <div className="faq-answer fade-in">
+                  <div className="faq-answer">
                     {faq.answer}
                   </div>
                 )}

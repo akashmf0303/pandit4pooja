@@ -1,7 +1,7 @@
 /* Trust & Authority Ecosystem CSS */
 
 .trust-section-bg {
-  background-color: #fdfcfaf;
+  background-color: #fdfcfa;
   background-image: linear-gradient(180deg, #ffffff 0%, #faf9f7 100%);
   padding: 100px 20px;
 }
@@ -277,5 +277,110 @@
   
   .edu-text {
     font-size: 16px;
+  }
+}
+
+/* Preparation Guide Responsive Styles */
+.prep-guide-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.prep-guide-title {
+  font-family: var(--font-heading);
+  font-size: 36px;
+  color: var(--color-accent-secondary);
+  margin-bottom: 16px;
+}
+
+.prep-guide-description {
+  color: var(--color-text-secondary);
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.prep-guide-image-wrapper {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(110, 38, 14, 0.1);
+  height: 100%;
+  min-height: 500px;
+}
+
+.prep-guide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.prep-guide-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%);
+}
+
+.prep-guide-image-text {
+  position: absolute;
+  bottom: 32px;
+  left: 32px;
+  right: 32px;
+  color: white;
+}
+
+.prep-guide-image-text h3 {
+  font-family: var(--font-heading);
+  font-size: 24px;
+  margin: 0 0 8px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.prep-guide-image-text p {
+  margin: 0;
+  font-size: 15px;
+  color: rgba(255,255,255,0.9);
+}
+
+@media (max-width: 992px) {
+  .prep-guide-container {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  
+  .prep-guide-title {
+    font-size: 32px;
+  }
+  
+  .prep-guide-image-wrapper {
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .prep-guide-title {
+    font-size: 28px;
+  }
+  
+  .prep-guide-description {
+    font-size: 16px;
+  }
+  
+  .prep-guide-image-wrapper {
+    min-height: 350px;
+    border-radius: 16px;
+  }
+  
+  .prep-guide-image-text {
+    bottom: 24px;
+    left: 24px;
+    right: 24px;
   }
 }

@@ -5,13 +5,13 @@ import './Trust.css';
 const PreparationGuide = () => {
   return (
     <section className="trust-section-bg">
-      <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'center' }}>
+      <div className="prep-guide-container">
         
-        <div>
-          <h2 style={{ fontFamily: 'var(--font-heading)', fontSize: '36px', color: 'var(--color-accent-secondary)', marginBottom: '16px' }}>
+        <div className="prep-guide-content">
+          <h2 className="prep-guide-title">
             How We Prepare Your Ritual
           </h2>
-          <p style={{ color: 'var(--color-text-secondary)', fontSize: '18px', lineHeight: '1.6', marginBottom: '32px' }}>
+          <p className="prep-guide-description">
             A successful pooja demands absolute purity in materials and profound scriptural accuracy. We handle the entire preparation process so your family can focus purely on devotion.
           </p>
 
@@ -50,12 +50,12 @@ const PreparationGuide = () => {
           </div>
         </div>
 
-        <div style={{ position: 'relative', borderRadius: '24px', overflow: 'hidden', boxShadow: '0 20px 40px rgba(110, 38, 14, 0.1)' }}>
-          <img src="/images/real_pooja_samagri.jpg" alt="Authentic Pooja Samagri Preparation" style={{ width: '100%', height: '100%', objectFit: 'cover', minHeight: '500px', display: 'block' }} />
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)' }} />
-          <div style={{ position: 'absolute', bottom: '32px', left: '32px', right: '32px', color: 'white' }}>
-            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '24px', margin: '0 0 8px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>Pure & Authentic</h3>
-            <p style={{ margin: 0, fontSize: '15px', color: 'rgba(255,255,255,0.9)' }}>Ensuring complete spiritual accuracy for every ritual.</p>
+        <div className="prep-guide-image-wrapper">
+          <img src="/images/real_pooja_samagri.jpg" alt="Authentic Pooja Samagri Preparation" className="prep-guide-img" />
+          <div className="prep-guide-image-overlay" />
+          <div className="prep-guide-image-text">
+            <h3>Pure & Authentic</h3>
+            <p>Ensuring complete spiritual accuracy for every ritual.</p>
           </div>
         </div>
 

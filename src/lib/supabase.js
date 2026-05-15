@@ -7,8 +7,15 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase credentials not found in environment variables. Please check your .env file.');
 }
 
-// Create a single supabase client for interacting with your database
 export const supabase = createClient(
   supabaseUrl || 'https://placeholder-project.supabase.co', 
-  supabaseAnonKey || 'placeholder-anon-key'
+  supabaseAnonKey || 'placeholder-anon-key',
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      storage: window.sessionStorage
+    }
+  }
 );

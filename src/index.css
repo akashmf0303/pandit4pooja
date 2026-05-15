@@ -201,3 +201,16 @@ button {
   box-shadow: var(--shadow-hover);
   transform: translateY(-4px);
 }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 32px;
+}
+
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}

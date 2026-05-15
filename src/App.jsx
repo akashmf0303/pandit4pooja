@@ -23,7 +23,7 @@ import PanditManagement from './pages/Admin/views/PanditManagement';
 import MuhuratManagement from './pages/Admin/views/MuhuratManagement';
 import ContentManagement from './pages/Admin/views/ContentManagement';
 import ForgotPassword from './pages/Auth/ForgotPassword';
-import ProtectedRoute from './components/Auth/ProtectedRoute';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { Toaster } from 'react-hot-toast';
 
 // Scroll to top component to ensure new pages start at the top
@@ -89,7 +89,7 @@ const App = () => {
         
         {/* Admin Routes outside main Layout to avoid standard header/footer */}
         <Route path="/admin" element={
-          <ProtectedRoute requireRole="admin">
+          <ProtectedRoute requireAdmin={true}>
             <AdminLayout />
           </ProtectedRoute>
         }>

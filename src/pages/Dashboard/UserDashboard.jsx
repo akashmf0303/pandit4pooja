@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { Link, Navigate } from 'react-router-dom';
 import { Clock, Calendar, CheckCircle2, ChevronRight, FileText, CalendarPlus, Loader2 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const UserDashboard = () => {
-  const { user, profile, signOut, updateProfile } = useAuth();
+  const { user, profile, isAdmin, signOut, updateProfile } = useAuth();
   
   // We'll fetch real bookings from Supabase here later
   const [bookings, setBookings] = useState([]);
@@ -19,6 +19,10 @@ const UserDashboard = () => {
     tob: '',
     pob: ''
   });
+
+  if (isAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
 
   useEffect(() => {
     if (profile) {
@@ -45,7 +49,7 @@ const UserDashboard = () => {
   return (
     <div style={{ minHeight: '80vh', paddingTop: '120px', paddingBottom: '60px', backgroundColor: '#faf9f7' }}>
       <div className="container" style={{ maxWidth: '900px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px', flexWrap: 'wrap', gap: '16px' }}>
           <div>
             <h2 style={{ fontSize: '32px', color: 'var(--color-accent-secondary)', fontFamily: 'var(--font-heading)' }}>My Spiritual Journey</h2>
             <p style={{ color: 'var(--color-text-secondary)' }}>Manage your rituals, bookings, and profile.</p>
@@ -53,7 +57,7 @@ const UserDashboard = () => {
           <button onClick={signOut} className="btn-outline" style={{ padding: '10px 20px' }}>Logout</button>
         </div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '32px' }}>
+        <div className="dashboard-grid">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <h3 style={{ fontSize: '20px', color: 'var(--color-text-primary)', borderBottom: '1px solid rgba(0,0,0,0.1)', paddingBottom: '12px' }}>Active Bookings</h3>
             

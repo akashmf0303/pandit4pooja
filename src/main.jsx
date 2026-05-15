@@ -6,11 +6,9 @@ import { AuthProvider } from './context/AuthContext'
 import { BookingProvider } from './context/BookingContext'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <AuthProvider>
-      <BookingProvider>
-        <App />
-      </BookingProvider>
-    </AuthProvider>
-  </StrictMode>,
+  <AuthProvider>
+    <BookingProvider>
+      <App />
+    </BookingProvider>
+  </AuthProvider>
 )

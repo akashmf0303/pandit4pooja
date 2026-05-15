@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { supabase } from '../../lib/supabase';
 import './Auth.css';
 
 const Login = () => {
@@ -14,27 +15,27 @@ const Login = () => {
 
   const from = location.state?.from?.pathname || '/';
 
-  useEffect(() => {
-    // Only redirect once both user and profile are loaded
-    if (user && profile) {
-      if (profile.role === 'admin' && from === '/') {
-        navigate('/admin', { replace: true });
-      } else {
-        navigate(from, { replace: true });
-      }
+  if (user && profile) {
+    if (profile.role === 'admin' || profile.role === 'super_admin') {
+      return <Navigate to="/admin" replace />;
+    } else {
+      return <Navigate to={from === '/' ? '/dashboard' : from} replace />;
     }
-  }, [user, profile, navigate, from]);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!email || !password) return;
     
     setIsSubmitting(true);
+    // signIn now handles auth, explicit profile fetching, and auto-healing synchronously!
     const { error } = await signIn(email, password);
-    setIsSubmitting(false);
     
-    // Note: Navigation is now handled by the useEffect above
-    // so we wait for the profile to load before redirecting.
+    setIsSubmitting(false);
+
+    if (error) {
+      return;
+    }
   };
 
   return (
