@@ -29,7 +29,7 @@ export const Poojas = () => {
         
         <div className="pooja-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '32px' }}>
           {poojasData.map((pooja, index) => (
-            <div key={index} className="pooja-card">
+            <Link key={index} to={`/poojas/${pooja.id}`} className="pooja-card" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="pooja-image-wrapper">
                 <img src={pooja.image} alt={pooja.title} />
               </div>
@@ -40,11 +40,11 @@ export const Poojas = () => {
                   <span>Starts from</span>
                   <strong>{pooja.price}</strong>
                 </div>
-                <Link to={`/poojas/${pooja.id}`} className="btn-outline">
+                <div className="btn-outline" style={{ textAlign: 'center' }}>
                   View Details
-                </Link>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

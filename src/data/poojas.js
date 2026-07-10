@@ -1,28 +1,133 @@
-// Shared fallback images since we don't have 27 distinct images yet
-const defaultImages = [
-  '/images/griha_pravesh.png',
-  '/images/satyanarayan_1778447088142.png',
-  '/images/shiva_puja_1778447103439.png',
-  '/images/navgrah_1778447118805.png',
-  '/images/hanuman_puja_1778447133698.png',
-  '/images/lakshmi_ganesh_1778447148678.png'
-];
-
 const getImage = (title, index) => {
   const t = title.toLowerCase();
-  if (t.includes('shiv') || t.includes('rudra') || t.includes('mahamrityunjaya')) {
-    return '/images/real_shivling_pooja.jpg';
+  
+  // 1. Lakshmi Ganesh
+  if (t.includes('lakshmi ganesh') || t.includes('laxmi ganesh')) {
+    return '/images/lakshmi_ganesh_1778447148678.png';
   }
-  if (t.includes('griha pravesh') || t.includes('sanskar')) {
+  
+  // 2. Grih Shanti
+  if (t.includes('grih shanti')) {
     return '/images/real_family_havan.jpg';
   }
-  if (t.includes('havan') || t.includes('shanti') || t.includes('yagya') || t.includes('dosh')) {
+  
+  // 3. Navgrah Shanti
+  if (t.includes('navgrah')) {
+    return '/images/navgrah_1778447118805.png';
+  }
+  
+  // 4. Satyanarayan
+  if (t.includes('satyanarayan')) {
+    return '/images/satyanarayan_1778447088142.png';
+  }
+  
+  // 5. Mangalik Dosh
+  if (t.includes('mangalik') || t.includes('mangal dosh')) {
+    return '/images/hanuman_puja_1778447133698.png';
+  }
+  
+  // 6. Gandmool Shanti
+  if (t.includes('gandmool')) {
+    return '/images/navgrah_1778447118805.png';
+  }
+  
+  // 7. Gayatri Jaap
+  if (t.includes('gayatri')) {
+    return '/images/goddess_gayatri.png';
+  }
+  
+  // 8. Mahamrityunjaya Jaap
+  if (t.includes('mahamrityunjaya')) {
+    return '/anushthan_mahamrityunjay.png';
+  }
+  
+  // 9. Kartik Shanti
+  if (t.includes('kartik')) {
+    return '/images/lord_kartikeya.png';
+  }
+  
+  // 10. Griha Pravesh
+  if (t.includes('griha pravesh')) {
+    return '/images/griha_pravesh.png';
+  }
+  
+  // 11. Chandi Path / Yagya / Devi Bhagwat
+  if (t.includes('chandi') || t.includes('devi bhagwat')) {
+    return '/images/durga_chandi.png';
+  }
+  
+  // 12. Sundarkand
+  if (t.includes('sundarkand')) {
+    return '/images/hanuman_puja_1778447133698.png';
+  }
+  
+  // 13. Ramcharit Manas
+  if (t.includes('ramcharit') || t.includes('manas')) {
+    return '/images/lord_rama.png';
+  }
+  
+  // 14. Pitra Dosh / Amavas Shanti
+  if (t.includes('pitra') || t.includes('amavas')) {
+    return '/images/pitru_puja.png';
+  }
+  
+  // 15. Kalsarp Dosh
+  if (t.includes('kalsarp')) {
+    return '/images/kalsarp_shanti.png';
+  }
+  
+  // 16. Bhagwat Puran
+  if (t.includes('bhagwat puran')) {
+    return '/images/lord_krishna.png';
+  }
+  
+  // 17. Shiv Mahapuran / Rudrabhishek
+  if (t.includes('shiv mahapuran')) {
+    return '/images/shiva_puja_1778447103439.png';
+  }
+  if (t.includes('rudrabhishek')) {
+    return '/anushthan_rudrabhishek.png';
+  }
+  
+  // 18. Garud Puran
+  if (t.includes('garud')) {
+    return '/images/garud_puran.png';
+  }
+  
+  // 19. Grih Shuddhi
+  if (t.includes('grih shuddhi')) {
+    return '/images/real_family_havan.jpg';
+  }
+  
+  // 20. Naam Karan
+  if (t.includes('naam karan') || t.includes('naamkaran')) {
+    return '/images/naamkaran.png';
+  }
+  
+  // 21. Vivah Pujan
+  if (t.includes('vivah')) {
+    return '/images/vivah_sanskar.png';
+  }
+  
+  // 22. Baglamukhi
+  if (t.includes('baglamukhi')) {
+    return '/images/goddess_baglamukhi.png';
+  }
+  
+  // 23. Shodas Sanskar
+  if (t.includes('shodas sanskar')) {
+    return '/images/shodas_sanskar.png';
+  }
+
+  // General fallbacks based on keywords
+  if (t.includes('shiv') || t.includes('rudra')) {
+    return '/images/shiva_puja_1778447103439.png';
+  }
+  if (t.includes('havan') || t.includes('yagya') || t.includes('shanti') || t.includes('dosh')) {
     return '/images/real_hero_havan.jpg';
   }
-  if (t.includes('katha') || t.includes('path') || t.includes('lakshmi') || t.includes('baglamukhi')) {
-    return '/images/real_shivling_decorated.jpg';
-  }
-  return defaultImages[index % defaultImages.length];
+  
+  return '/images/real_pooja_samagri.jpg';
 };
 
 // Helper to generate slug
@@ -58,8 +163,7 @@ const allPoojasList = [
   { title: 'Shodas Sanskar Pujan', price: '₹11,000' }
 ];
 
-// Generate rich content dynamically based on the title to ensure it doesn't feel like a blank template
-export const poojasData = allPoojasList.map((pooja, index) => {
+const defaultPoojas = allPoojasList.map((pooja, index) => {
   const isDoshNivaran = pooja.title.toLowerCase().includes('dosh');
   const isPath = pooja.title.toLowerCase().includes('path') || pooja.title.toLowerCase().includes('puran');
   const isSanskar = pooja.title.toLowerCase().includes('sanskar');
@@ -186,3 +290,24 @@ export const poojasData = allPoojasList.map((pooja, index) => {
     ]
   };
 });
+
+export const poojasData = [...defaultPoojas];
+
+export const syncLocalCatalog = () => {
+  if (typeof window !== 'undefined') {
+    const localData = localStorage.getItem('admin_poojas_catalog');
+    if (localData) {
+      try {
+        const list = JSON.parse(localData);
+        poojasData.length = 0;
+        poojasData.push(...list);
+      } catch (e) {
+        console.warn('Failed to parse admin_poojas_catalog:', e);
+      }
+    } else {
+      localStorage.setItem('admin_poojas_catalog', JSON.stringify(defaultPoojas));
+    }
+  }
+};
+
+syncLocalCatalog();

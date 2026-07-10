@@ -55,7 +55,7 @@ const PoojaDetail = () => {
             </div>
             
             <div className="pooja-hero-actions">
-              <Link to="/booking" className="btn-primary">
+              <Link to={`/booking?pooja=${poojaData.id}`} className="btn-primary">
                 Book Consultation
               </Link>
               <a href="https://wa.me/917009894907" target="_blank" rel="noreferrer" className="btn-secondary">
@@ -286,7 +286,7 @@ const PoojaDetail = () => {
               <h2>Ready to invite divine blessings?</h2>
               <p>Our experts are ready to guide you in organizing a deeply spiritual and authentic Vedic ceremony for your family.</p>
               <div className="hero-buttons" style={{ justifyContent: 'center' }}>
-                <Link to="/booking" className="btn-primary" style={{ backgroundColor: 'white', color: 'var(--color-accent-secondary)', borderColor: 'white' }}>
+                <Link to={`/booking?pooja=${poojaData.id}`} className="btn-primary" style={{ backgroundColor: 'white', color: 'var(--color-accent-secondary)', borderColor: 'white' }}>
                   Book Consultation Now
                 </Link>
                 <a href="https://wa.me/917009894907" target="_blank" rel="noreferrer" className="btn-secondary" style={{ color: 'white', borderColor: 'rgba(255,255,255,0.7)' }}>

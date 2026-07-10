@@ -8,24 +8,24 @@ const RitualMoments = () => {
   const moments = [
     {
       id: 1,
-      title: "Authentic Havan Preparation",
-      subtitle: "The Science of Samagri",
-      image: "/images/real_pooja_samagri.jpg",
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" // Placeholder for actual video
+      title: "Sundarkand Path",
+      subtitle: "Recitation of Lord Hanuman's Glory",
+      image: "/images/hanuman_puja_1778447133698.png",
+      videoUrl: "https://res.cloudinary.com/dxtxxbjxj/video/upload/v1783702955/WhatsApp_Video_2026-07-10_at_10.29.39_PM_kx2vry.mp4"
     },
     {
       id: 2,
-      title: "Sacred Chants & Aarti",
-      subtitle: "Experiencing Deep Devotion",
-      image: "/images/real_shivling_pooja.jpg",
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+      title: "Mahamrityunjay Anusthan",
+      subtitle: "Vedic Chants for Health & Longevity",
+      image: "/images/shiva_puja_1778447103439.png",
+      videoUrl: "https://res.cloudinary.com/dxtxxbjxj/video/upload/v1783702965/WhatsApp_Video_2026-07-10_at_10.30.17_PM_aaypaw.mp4"
     },
     {
       id: 3,
-      title: "Family Griha Pravesh",
-      subtitle: "Inviting Prosperity Home",
-      image: "/images/real_family_havan.jpg",
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+      title: "Durga Saptashati Path",
+      subtitle: "Sacred Invocation of Divine Mother",
+      image: "/images/durga_chandi.png",
+      videoUrl: "https://res.cloudinary.com/dxtxxbjxj/video/upload/v1783702978/WhatsApp_Video_2026-07-10_at_10.31.02_PM_xhi7vz.mp4"
     }
   ];
 
@@ -66,13 +66,13 @@ const RitualMoments = () => {
           <div className="video-modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="video-modal-close" onClick={() => setActiveVideo(null)}>×</button>
             <div className="video-wrapper">
-              {/* Replace with actual video player when videos are provided */}
-              <iframe 
+              <video 
                 src={activeVideo} 
-                allow="autoplay; encrypted-media" 
-                allowFullScreen
-                title="Ritual Video"
-              ></iframe>
+                controls 
+                autoPlay 
+                playsInline 
+                style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
+              />
             </div>
           </div>
         </div>

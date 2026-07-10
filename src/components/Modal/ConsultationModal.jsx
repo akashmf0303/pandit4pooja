@@ -10,7 +10,7 @@ const ConsultationModal = ({ isOpen, onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitted(true);
-    // In a real app, this would trigger an API call to Supabase/Email service
+    // In a real app, this would trigger an API call to Firebase/Email service
     setTimeout(() => {
       setIsSubmitted(false);
       onClose();

@@ -1,4 +1,4 @@
-export const blogsData = [
+const defaultBlogs = [
   {
     id: 'importance-of-griha-pravesh-muhurat',
     title: 'The Science and Spiritual Importance of Griha Pravesh Muhurat',
@@ -110,6 +110,27 @@ It is highly recommended to perform this ritual at least once a year, or on majo
     relatedPoojas: ['satyanarayan-katha']
   }
 ];
+
+export const blogsData = [...defaultBlogs];
+
+export const syncLocalBlogs = () => {
+  if (typeof window !== 'undefined') {
+    const localData = localStorage.getItem('admin_blogs');
+    if (localData) {
+      try {
+        const list = JSON.parse(localData);
+        blogsData.length = 0;
+        blogsData.push(...list);
+      } catch (e) {
+        console.warn('Failed to parse admin_blogs:', e);
+      }
+    } else {
+      localStorage.setItem('admin_blogs', JSON.stringify(defaultBlogs));
+    }
+  }
+};
+
+syncLocalBlogs();
 
 export const categories = [
   'Pooja Guides',

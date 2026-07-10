@@ -2,13 +2,76 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Link, Navigate } from 'react-router-dom';
 import { Clock, Calendar, CheckCircle2, ChevronRight, FileText, CalendarPlus, Loader2 } from 'lucide-react';
+import { db } from '../../lib/firebase';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+
+const withTimeout = (promise, timeoutMs = 3000) => {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Firestore timeout')), timeoutMs))
+  ]);
+};
 
 const UserDashboard = () => {
   const { user, profile, isAdmin, signOut, updateProfile } = useAuth();
   
-  // We'll fetch real bookings from Supabase here later
+  // Fetch real bookings from Firestore and LocalStorage
   const [bookings, setBookings] = useState([]);
-  
+  const [loadingBookings, setLoadingBookings] = useState(true);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      if (!user) return;
+
+      const localKey = `bookings_${user.uid}`;
+      const localData = localStorage.getItem(localKey);
+      let localBookings = localData ? JSON.parse(localData) : [];
+
+      if (localBookings.length > 0) {
+        localBookings.sort((a, b) => new Date(b.createdAt || b.created_at) - new Date(a.createdAt || a.created_at));
+        setBookings(localBookings);
+        setLoadingBookings(false);
+      }
+
+      try {
+        const q = query(
+          collection(db, 'bookings'),
+          where('userId', '==', user.uid)
+        );
+        const querySnapshot = await withTimeout(getDocs(q), 3000);
+        const firestoreBookings = [];
+        querySnapshot.forEach((doc) => {
+          firestoreBookings.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Merge to avoid duplicates
+        const mergedMap = new Map();
+        localBookings.forEach(b => mergedMap.set(b.bookingId || b.id, b));
+        firestoreBookings.forEach(b => mergedMap.set(b.bookingId || b.id, b));
+
+        const mergedList = Array.from(mergedMap.values());
+        localStorage.setItem(localKey, JSON.stringify(mergedList));
+
+        mergedList.sort((a, b) => new Date(b.createdAt || b.created_at) - new Date(a.createdAt || a.created_at));
+        setBookings(mergedList);
+      } catch (err) {
+        console.warn('[DASHBOARD] Error querying firestore, showing local storage only:', err);
+        if (localBookings.length === 0) {
+          const local = localStorage.getItem(localKey);
+          if (local) {
+            const list = JSON.parse(local);
+            list.sort((a, b) => new Date(b.createdAt || b.created_at) - new Date(a.createdAt || a.created_at));
+            setBookings(list);
+          }
+        }
+      } finally {
+        setLoadingBookings(false);
+      }
+    };
+
+    fetchBookings();
+  }, [user]);
+
   // Profile editing state
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
@@ -61,7 +124,11 @@ const UserDashboard = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <h3 style={{ fontSize: '20px', color: 'var(--color-text-primary)', borderBottom: '1px solid rgba(0,0,0,0.1)', paddingBottom: '12px' }}>Active Bookings</h3>
             
-            {bookings.length === 0 ? (
+            {loadingBookings ? (
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
+                <Loader2 className="animate-spin" size={32} color="var(--color-accent-primary)" />
+              </div>
+            ) : bookings.length === 0 ? (
               <div style={{ background: 'white', padding: '40px', borderRadius: '16px', border: '1px solid rgba(110, 38, 14, 0.1)', textAlign: 'center' }}>
                 <CalendarPlus size={48} color="var(--color-accent-primary)" style={{ margin: '0 auto 16px', opacity: 0.8 }} />
                 <h4 style={{ fontSize: '18px', marginBottom: '8px' }}>No Active Bookings</h4>
@@ -70,24 +137,26 @@ const UserDashboard = () => {
               </div>
             ) : (
               bookings.map(booking => (
-                <div key={booking.id} style={{ background: 'white', padding: '24px', borderRadius: '16px', border: '1px solid rgba(110, 38, 14, 0.1)' }}>
+                <div key={booking.bookingId || booking.id} style={{ background: 'white', padding: '24px', borderRadius: '16px', border: '1px solid rgba(110, 38, 14, 0.1)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
                     <div>
-                      <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-accent-primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>{booking.id}</span>
-                      <h4 style={{ fontSize: '20px', marginTop: '4px' }}>{booking.pooja}</h4>
+                      <span style={{ fontSize: '12px', fontWeight: '600', color: 'var(--color-accent-primary)', textTransform: 'uppercase', letterSpacing: '1px' }}>{booking.bookingId || booking.id}</span>
+                      <h4 style={{ fontSize: '20px', marginTop: '4px' }}>{booking.pooja_name || booking.poojaTitle || booking.pooja}</h4>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(224, 110, 56, 0.1)', color: 'var(--color-accent-primary)', padding: '6px 12px', borderRadius: '20px', fontSize: '14px', fontWeight: '500' }}>
-                      <Clock size={16} /> {booking.status}
+                      <Clock size={16} style={{ animation: booking.status === 'Pending Consult' ? 'pulse 2s infinite' : 'none' }} /> {booking.status}
                     </div>
                   </div>
                   
                   <div style={{ display: 'flex', gap: '24px', color: 'var(--color-text-secondary)', fontSize: '14px', marginBottom: '24px' }}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Calendar size={16} /> {booking.date}</span>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><FileText size={16} /> {booking.amount}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><Calendar size={16} /> {booking.booking_date || booking.schedule?.date || booking.date || 'Awaiting Muhurat'}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><FileText size={16} /> ₹{booking.amount || booking.basePrice}</span>
                   </div>
                   
                   <div style={{ borderTop: '1px solid rgba(0,0,0,0.05)', paddingTop: '16px', display: 'flex', justifyContent: 'flex-end' }}>
-                    <button className="btn-outline" style={{ padding: '8px 16px', fontSize: '14px' }}>View Details <ChevronRight size={16} style={{ display: 'inline', verticalAlign: 'middle' }} /></button>
+                    <Link to={`/poojas/${booking.poojaId}`} className="btn-outline" style={{ padding: '8px 16px', fontSize: '14px', textDecoration: 'none' }}>
+                      View Details <ChevronRight size={16} style={{ display: 'inline', verticalAlign: 'middle' }} />
+                    </Link>
                   </div>
                 </div>
               ))

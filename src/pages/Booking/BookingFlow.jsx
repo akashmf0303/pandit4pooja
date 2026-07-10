@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Check, CheckCircle, ChevronRight, MessageCircle } from 'lucide-react';
 import { useBooking } from '../../context/BookingContext';
 import { poojasData } from '../../data/poojas';
@@ -15,10 +15,24 @@ const steps = [
 ];
 
 const BookingFlow = () => {
-  const { currentStep, bookingData, updateBookingData, setPoojaSelection, nextStep, prevStep, submitBooking } = useBooking();
+  const { currentStep, bookingData, updateBookingData, setPoojaSelection, nextStep, prevStep, submitBooking, goToStep } = useBooking();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingId, setBookingId] = useState(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const poojaParam = searchParams.get('pooja');
+  const hasPrepopulated = useRef(false);
+
+  useEffect(() => {
+    if (poojaParam && !hasPrepopulated.current) {
+      const selectedPooja = poojasData.find(p => p.id === poojaParam);
+      if (selectedPooja) {
+        setPoojaSelection(selectedPooja.id, selectedPooja.title, selectedPooja.price);
+        goToStep(2);
+        hasPrepopulated.current = true;
+      }
+    }
+  }, [poojaParam, setPoojaSelection, goToStep]);
 
   const handleNext = async () => {
     if (currentStep === 5) {
@@ -204,7 +218,7 @@ const BookingFlow = () => {
               />
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+            <div className="form-grid-2col">
               <div className="form-group">
                 <label>City</label>
                 <select 
@@ -230,7 +244,7 @@ const BookingFlow = () => {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div className="form-grid-2col" style={{ marginBottom: 0 }}>
               <div className="form-group">
                 <label>WhatsApp Number</label>
                 <input 

@@ -89,7 +89,7 @@ const Home = () => {
           
           <div className="pooja-grid slide-up">
             {featuredPoojas.map((pooja, index) => (
-              <div className="pooja-card" key={index}>
+              <Link to={`/poojas/${pooja.id}`} className="pooja-card" key={index} style={{ textDecoration: 'none', color: 'inherit' }}>
                 <div className="pooja-image-wrapper">
                   <img src={pooja.image} alt={pooja.title} />
                 </div>
@@ -102,9 +102,9 @@ const Home = () => {
                       {pooja.price}
                     </div>
                   </div>
-                  <Link to={`/poojas/${pooja.id}`} className="btn-secondary">View Details</Link>
+                  <div className="btn-secondary" style={{ textAlign: 'center' }}>View Details</div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -168,18 +168,15 @@ const Home = () => {
               <Link to="/online-poojas" className="btn-primary">Explore e-Poojas</Link>
             </div>
             <div className="nri-image slide-left">
-              <div style={{ position: 'relative', width: '100%', paddingBottom: '120%', overflow: 'hidden', borderRadius: '12px' }}>
-                <iframe 
-                  src="https://www.instagram.com/reel/DKxQauoT_ap/embed" 
-                  width="100%" 
-                  height="100%" 
-                  frameBorder="0" 
-                  scrolling="no" 
-                  allowTransparency="true"
-                  style={{ position: 'absolute', top: 0, left: 0 }}
-                  title="Preparation Video"
-                ></iframe>
-              </div>
+              <video 
+                src="https://res.cloudinary.com/dxtxxbjxj/video/upload/v1783702928/WhatsApp_Video_2026-07-10_at_10.26.45_PM_cwae6b.mp4" 
+                controls 
+                autoPlay 
+                muted 
+                loop 
+                playsInline 
+                style={{ width: '100%', borderRadius: '12px', display: 'block', boxShadow: 'var(--shadow-soft)' }}
+              />
             </div>
           </div>
         </div>

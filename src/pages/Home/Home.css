@@ -427,13 +427,14 @@
 .nri-image::after {
   content: '';
   position: absolute;
-  top: -20px;
-  right: -20px;
-  width: 100%;
-  height: 100%;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -8px;
   border: 2px solid var(--color-accent-premium);
-  border-radius: var(--border-radius-lg);
+  border-radius: 16px;
   z-index: -1;
+  pointer-events: none;
 }
 
 /* 7. Meet Our Pandit Section */

@@ -1,5 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { auth, db } from '../lib/firebase';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword, 
+  signOut as firebaseSignOut, 
+  sendEmailVerification, 
+  sendPasswordResetEmail, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  onAuthStateChanged 
+} from 'firebase/auth';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import toast from 'react-hot-toast';
 import { Loader2 } from 'lucide-react';
 
@@ -7,6 +18,14 @@ const AuthContext = createContext();
 
 export const useAuth = () => {
   return useContext(AuthContext);
+};
+
+// Helper for firestore operations to prevent hanging if DB is offline/disabled
+const withTimeout = (promise, timeoutMs = 2500) => {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Firestore timeout')), timeoutMs))
+  ]);
 };
 
 export const AuthProvider = ({ children }) => {
@@ -18,17 +37,11 @@ export const AuthProvider = ({ children }) => {
   const fetchProfile = async (userId) => {
     if (!userId) return null;
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-        
-      if (error && error.code !== 'PGRST116') {
-        console.error('[AUTH] Error fetching profile:', error);
-      }
+      const docRef = doc(db, 'profiles', userId);
+      const docSnap = await withTimeout(getDoc(docRef), 2500);
       
-      if (data) {
+      if (docSnap.exists()) {
+        const data = docSnap.data();
         setProfile(data);
         return data;
       }
@@ -41,100 +54,92 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     let mounted = true;
 
-    const initializeAuth = async () => {
-      const failsafe = setTimeout(() => {
-        if (mounted && loading) {
-          console.error('[AUTH] 🔴 FAILSAFE TRIGGERED: Auth initialization exceeded 3 seconds.');
-          setLoading(false);
-        }
-      }, 3000);
+    console.log('[AUTH] Starting initialization...');
+    
+    // Set up failsafe timeout
+    const failsafe = setTimeout(() => {
+      if (mounted && loading) {
+        console.error('[AUTH] 🔴 FAILSAFE TRIGGERED: Auth initialization exceeded 3 seconds.');
+        setLoading(false);
+      }
+    }, 3000);
 
+    // Listen to Firebase auth state changes
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       try {
-        console.log('[AUTH] Starting initialization...');
-        
-        // FIRST: await supabase.auth.getSession()
-        const { data: { session: currentSession }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('[AUTH] Session fetch error:', error);
-          throw error;
-        }
+        if (!mounted) return;
 
-        if (mounted) {
-          if (!currentSession) {
-            setSession(null);
-            setUser(null);
-            setProfile(null);
-            console.log('[AUTH] No session found during initialization.');
-          } else {
-            // STEP 2: Fetch profile FIRST
-            console.log('[AUTH] Session exists, fetching profile for:', currentSession.user.id);
-            await fetchProfile(currentSession.user.id);
-
-            // STEP 3: Set all auth state at once
-            setSession(currentSession);
-            setUser(currentSession.user);
-            console.log('[AUTH] Full auth state populated successfully.');
-          }
-        }
-      } catch (err) {
-        console.error('[AUTH] Critical initialization failure:', err);
-        if (mounted) {
+        if (!currentUser) {
           setSession(null);
           setUser(null);
           setProfile(null);
+          console.log('[AUTH] No user found during state change.');
+        } else {
+          console.log('[AUTH] User exists, fetching profile for:', currentUser.uid);
+          
+          let fetchedProf = null;
+          try {
+            fetchedProf = await fetchProfile(currentUser.uid);
+          } catch (fsErr) {
+            console.error('[AUTH] Failed to fetch profile from Firestore during auth change:', fsErr);
+          }
+          
+          // If profile does not exist in firestore yet, create a default one
+          if (!fetchedProf) {
+            const email = currentUser.email || '';
+            const isSuperAdminEmail = email.toLowerCase() === 'ankushadmin@panditt4pooja.in';
+            const isAdminEmail = email.toLowerCase() === 'admin@panditt4pooja.in';
+            const role = isSuperAdminEmail ? 'super_admin' : (isAdminEmail ? 'admin' : 'user');
+            
+            const defaultProfile = {
+              id: currentUser.uid,
+              email: email,
+              full_name: currentUser.displayName || 'User',
+              role: role,
+              updated_at: new Date().toISOString()
+            };
+            
+            try {
+              await withTimeout(setDoc(doc(db, 'profiles', currentUser.uid), defaultProfile), 2500);
+            } catch (fsErr) {
+              console.error('[AUTH] Failed to write fallback profile to Firestore:', fsErr);
+            }
+            setProfile(defaultProfile);
+          }
+          
+          setSession(currentUser);
+          setUser(currentUser);
+          console.log('[AUTH] Full auth state populated successfully.');
         }
+      } catch (err) {
+        console.error('[AUTH] Critical state change processing failure:', err);
       } finally {
         clearTimeout(failsafe);
         if (mounted) {
-          // STEP 4: Set loading false
-          console.log('[AUTH] Initialization complete. Loading = false');
           setLoading(false);
         }
       }
-    };
-
-    initializeAuth();
-
-    // ONE listener only. Store unsubscribe properly.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, newSession) => {
-        console.log('[AUTH] Event fired:', event);
-        if (!mounted) return;
-
-        // Ignore INITIAL_SESSION as we handle it manually in initializeAuth()
-        if (event === 'INITIAL_SESSION') return;
-
-        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') {
-          // We fetch profile manually in signIn and initializeAuth to avoid deadlocks here.
-          setSession(newSession);
-          setUser(newSession?.user ?? null);
-        } else if (event === 'SIGNED_OUT') {
-          setSession(null);
-          setUser(null);
-          setProfile(null);
-        }
-      }
-    );
+    });
 
     return () => {
       mounted = false;
-      subscription?.unsubscribe();
+      unsubscribe();
     };
   }, []);
 
   const updateProfile = async (updates) => {
     try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .upsert({ id: user.id, ...updates, updated_at: new Date().toISOString() })
-        .select()
-        .single();
-
-      if (error) throw error;
-      setProfile(data);
+      const docRef = doc(db, 'profiles', user.uid);
+      const updatedData = { ...updates, updated_at: new Date().toISOString() };
+      
+      await withTimeout(setDoc(docRef, updatedData, { merge: true }), 2500);
+      
+      // Update local state instantly
+      const mergedProfile = { ...profile, ...updatedData };
+      setProfile(mergedProfile);
+      
       toast.success('Profile updated successfully!');
-      return { data, error: null };
+      return { data: mergedProfile, error: null };
     } catch (error) {
       console.error('Error updating profile:', error);
       toast.error('Failed to update profile.');
@@ -144,177 +149,138 @@ export const AuthProvider = ({ children }) => {
 
   // Sign Up
   const signUp = async (email, password, fullName) => {
-    if (loading) {
-      console.warn('[AUTH] 🔴 BLOCKING REPEATED SIGNUP CALL: Already loading');
-      return { data: null, error: new Error('Request already in progress') };
-    }
-    
     console.log(`[AUTH] 🟢 EXECUTING SIGNUP REQUEST FOR: ${email}`);
     
     try {
-      setLoading(true);
       const isSuperAdminEmail = email.toLowerCase() === 'ankushadmin@panditt4pooja.in';
       const isAdminEmail = email.toLowerCase() === 'admin@panditt4pooja.in';
       const role = isSuperAdminEmail ? 'super_admin' : (isAdminEmail ? 'admin' : 'user');
 
-      const { data, error } = await withTimeout(
-        supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: fullName,
-              role: role
-            }
-          }
-        }),
-        20000,
-        'Signup API'
-      );
+      // 1. Create user in Firebase Auth
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const newUser = userCredential.user;
 
-      if (error) throw error;
+      // 2. Create profile document in Firestore
+      const newProfile = {
+        id: newUser.uid,
+        email: email.toLowerCase(),
+        full_name: fullName,
+        role: role,
+        updated_at: new Date().toISOString()
+      };
       
-      if (data?.user) {
-        // Attempt to create profile
-        const { error: profileError } = await withTimeout(
-          supabase.from('profiles').upsert({
-            id: data.user.id,
-            email: email,
-            full_name: fullName,
-            role: role,
-            updated_at: new Date().toISOString()
-          }),
-          10000,
-          'Signup Profile Upsert'
-        );
-        
-        if (profileError) {
-          console.error("Profile creation error:", profileError);
-        }
-
-        // STRICT EMAIL VERIFICATION ENFORCEMENT
-        // If Supabase gave us a session but the email is unconfirmed, kill it immediately
-        if (!data.user.email_confirmed_at) {
-          if (data.session) {
-            await supabase.auth.signOut();
-          }
-          toast.success('Verification email sent. Please check your inbox.');
-          return { data, error: null, needsVerification: true };
-        }
+      try {
+        await withTimeout(setDoc(doc(db, 'profiles', newUser.uid), newProfile), 2500);
+      } catch (fsErr) {
+        console.error('[AUTH] Firestore profile write failed during signup:', fsErr);
       }
 
+      // Add admin notification
+      try {
+        const notifyKey = 'admin_notifications';
+        const existingNotify = localStorage.getItem(notifyKey);
+        const notifyList = existingNotify ? JSON.parse(existingNotify) : [];
+        notifyList.unshift({
+          id: 'notify_' + Date.now() + '_' + Math.random().toString().substring(2, 6),
+          message: `New user registration: ${fullName} (${email.toLowerCase()}).`,
+          type: 'signup',
+          read: false,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        });
+        localStorage.setItem(notifyKey, JSON.stringify(notifyList.slice(0, 20)));
+      } catch (err) {
+        console.warn('Failed to save admin notification:', err);
+      }
+
+      // 3. Optional: Send Verification Email
+      try {
+        await sendEmailVerification(newUser);
+      } catch (verErr) {
+        console.warn('[AUTH] Verification email sending skipped/failed:', verErr.message);
+      }
+      
       toast.success('Successfully signed up! Welcome to Panditt4Pooja.');
-      return { data, error: null };
+      return { data: userCredential, error: null, needsVerification: false };
     } catch (error) {
       toast.error(error.message || 'An error occurred during sign up.');
       return { data: null, error };
-    } finally {
-      setLoading(false);
     }
-  };
-
-  // Helper to wrap promises in a timeout
-  const withTimeout = (promise, ms, name) => {
-    return Promise.race([
-      promise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error(`${name} timed out after ${ms}ms`)), ms))
-    ]);
   };
 
   // Log In
   const signIn = async (email, password) => {
-    if (loading) {
-      console.warn('[AUTH] 🔴 BLOCKING REPEATED SIGNIN CALL: Already loading');
-      return { data: null, profile: null, error: new Error('Request already in progress') };
-    }
-
     console.log(`[AUTH] 🟢 EXECUTING SIGNIN REQUEST FOR: ${email}`);
 
     try {
-      setLoading(true);
+      // 1. Authenticate with Firebase
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const loggedUser = userCredential.user;
       
-      const { data, error } = await withTimeout(
-        supabase.auth.signInWithPassword({ email, password }),
-        20000,
-        'Auth API'
-      );
-
-      if (error) throw error;
-
-      if (data?.user && !data.user.email_confirmed_at) {
-        await supabase.auth.signOut();
-        throw new Error('Please verify your email before logging in.');
-      }
-      
+      // 2. Fetch profile
       let fetchedProfile = null;
-      if (data?.user) {
-        const { data: profileData } = await withTimeout(
-          supabase.from('profiles').select('*').eq('id', data.user.id).single(),
-          10000,
-          'Profile Fetch'
-        );
-          
-        fetchedProfile = profileData;
-        
-        const isSuperAdminEmail = email.toLowerCase() === 'ankushadmin@panditt4pooja.in';
-        const isAdminEmail = email.toLowerCase() === 'admin@panditt4pooja.in';
-
-        if ((isSuperAdminEmail && fetchedProfile?.role !== 'super_admin') || 
-            (isAdminEmail && fetchedProfile?.role !== 'admin')) {
-           
-           const targetRole = isSuperAdminEmail ? 'super_admin' : 'admin';
-           const defaultName = isSuperAdminEmail ? 'Super Admin' : 'Admin';
-           
-           const { data: updatedProfile } = await withTimeout(
-             supabase.from('profiles').upsert({
-               id: data.user.id,
-               email: email.toLowerCase(),
-               role: targetRole,
-               full_name: fetchedProfile?.full_name || defaultName,
-               updated_at: new Date().toISOString()
-             }).select().single(),
-             10000,
-             'Profile Upsert'
-           );
-           
-           if (updatedProfile) fetchedProfile = updatedProfile;
+      try {
+        const docRef = doc(db, 'profiles', loggedUser.uid);
+        const docSnap = await withTimeout(getDoc(docRef), 2500);
+        if (docSnap.exists()) {
+          fetchedProfile = docSnap.data();
         }
-        
-        setProfile(fetchedProfile);
-        setUser(data.user);
-        setSession(data.session);
+      } catch (fsErr) {
+        console.error('[AUTH] Firestore profile fetch failed during login:', fsErr);
       }
+
+      // Auto-heal admin role status if logging in with designated admin emails
+      const isSuperAdminEmail = email.toLowerCase() === 'ankushadmin@panditt4pooja.in';
+      const isAdminEmail = email.toLowerCase() === 'admin@panditt4pooja.in';
+      
+      const targetRole = isSuperAdminEmail ? 'super_admin' : (isAdminEmail ? 'admin' : 'user');
+      const defaultName = isSuperAdminEmail ? 'Super Admin' : (isAdminEmail ? 'Admin' : 'User');
+
+      if (!fetchedProfile || 
+          (isSuperAdminEmail && fetchedProfile?.role !== 'super_admin') || 
+          (isAdminEmail && fetchedProfile?.role !== 'admin')) {
+         
+         const updatedProfile = {
+           id: loggedUser.uid,
+           email: email.toLowerCase(),
+           role: targetRole,
+           full_name: fetchedProfile?.full_name || defaultName,
+           updated_at: new Date().toISOString()
+         };
+         
+         try {
+           await withTimeout(setDoc(doc(db, 'profiles', loggedUser.uid), updatedProfile, { merge: true }), 2500);
+         } catch (fsErr) {
+           console.error('[AUTH] Fallback profile upsert failed:', fsErr);
+         }
+         fetchedProfile = updatedProfile;
+      }
+      
+      setProfile(fetchedProfile);
+      setUser(loggedUser);
+      setSession(loggedUser);
 
       toast.success('Successfully logged in.');
-      return { data, profile: fetchedProfile, error: null };
+      return { data: userCredential, profile: fetchedProfile, error: null };
     } catch (error) {
       toast.error(error.message || 'Invalid credentials.');
       return { data: null, profile: null, error };
-    } finally {
-      setLoading(false);
     }
   };
 
   // Log Out
   const signOut = async () => {
-    if (loading) {
-      console.warn('[AUTH] 🔴 BLOCKING SIGNOUT CALL: Already loading');
-      return;
-    }
-    
     console.log('[AUTH] 🟢 EXECUTING SIGNOUT REQUEST');
 
     try {
-      // 1. Force local state to clear immediately
+      // Force local state to clear immediately
       setUser(null);
       setProfile(null);
       setSession(null);
       
-      // 2. Tell Supabase to sign out natively (handles storage automatically)
-      await supabase.auth.signOut();
+      // Log out from Firebase Auth
+      await firebaseSignOut(auth);
       toast.success('Logged out successfully.');
     } catch (error) {
-      // Ignore API errors, because local state is already dead.
       console.warn('Backend signout error:', error);
       toast.success('Logged out successfully.');
     }
@@ -322,45 +288,30 @@ export const AuthProvider = ({ children }) => {
 
   // Resend Verification Email
   const resendVerificationEmail = async (email) => {
-    if (loading) {
-      console.warn('[AUTH] 🔴 BLOCKING RESEND EMAIL CALL: Already loading');
-      return { error: new Error('Request already in progress') };
-    }
-
     console.log(`[AUTH] 🟢 EXECUTING RESEND VERIFICATION REQUEST FOR: ${email}`);
 
     try {
-      setLoading(true);
-      const { data, error } = await supabase.auth.resend({
-        type: 'signup',
-        email: email,
-      });
-      if (error) throw error;
-      toast.success('Verification email resent! Check your inbox.');
-      return { error: null };
+      if (auth.currentUser) {
+        await sendEmailVerification(auth.currentUser);
+        toast.success('Verification email sent! Check your inbox.');
+        return { error: null };
+      } else {
+        throw new Error("You must be logged in to resend verification email.");
+      }
     } catch (error) {
       toast.error(error.message || 'Error resending verification email.');
       return { error };
-    } finally {
-      setLoading(false);
     }
   };
 
   // Reset Password Request
   const resetPassword = async (email) => {
-    if (loading) {
-      console.warn('[AUTH] 🔴 BLOCKING RESET PASSWORD CALL: Already loading');
-      return { error: new Error('Request already in progress') };
-    }
-    
     console.log(`[AUTH] 🟢 EXECUTING RESET PASSWORD REQUEST FOR: ${email}`);
 
     try {
-      setLoading(true);
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/update-password`,
+      await sendPasswordResetEmail(auth, email, {
+        url: `${window.location.origin}/login`,
       });
-      if (error) throw error;
       toast.success('Password reset email sent! Check your inbox.');
       return { error: null };
     } catch (error) {
@@ -372,13 +323,47 @@ export const AuthProvider = ({ children }) => {
   // Google Auth
   const signInWithGoogle = async () => {
     try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/`
+      const provider = new GoogleAuthProvider();
+      const userCredential = await signInWithPopup(auth, provider);
+      const googleUser = userCredential.user;
+      
+      // Fetch or initialize profile in Firestore
+      const docRef = doc(db, 'profiles', googleUser.uid);
+      
+      let userProfile = null;
+      try {
+        const docSnap = await withTimeout(getDoc(docRef), 2500);
+        if (docSnap.exists()) {
+          userProfile = docSnap.data();
         }
-      });
-      if (error) throw error;
+      } catch (fsErr) {
+        console.error('[AUTH] Firestore fetch failed during Google Sign-In:', fsErr);
+      }
+      
+      if (!userProfile) {
+        const email = googleUser.email || '';
+        const isSuperAdminEmail = email.toLowerCase() === 'ankushadmin@panditt4pooja.in';
+        const isAdminEmail = email.toLowerCase() === 'admin@panditt4pooja.in';
+        const role = isSuperAdminEmail ? 'super_admin' : (isAdminEmail ? 'admin' : 'user');
+        
+        userProfile = {
+          id: googleUser.uid,
+          email: email,
+          full_name: googleUser.displayName || 'Google User',
+          role: role,
+          updated_at: new Date().toISOString()
+        };
+        try {
+          await withTimeout(setDoc(docRef, userProfile), 2500);
+        } catch (fsErr) {
+          console.error('[AUTH] Firestore profile write failed during Google Sign-In:', fsErr);
+        }
+      }
+      
+      setProfile(userProfile);
+      setUser(googleUser);
+      setSession(googleUser);
+      toast.success('Successfully logged in with Google.');
     } catch (error) {
       toast.error(error.message || 'Error signing in with Google.');
     }

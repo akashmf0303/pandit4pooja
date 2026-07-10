@@ -181,6 +181,29 @@ button {
   transform: translateY(-2px);
 }
 
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-accent-primary);
+  border: 1.5px solid rgba(198, 106, 43, 0.4);
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  font-size: 15px;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background-color: rgba(198, 106, 43, 0.05);
+  color: var(--color-accent-primary);
+  border-color: var(--color-accent-primary);
+  transform: translateY(-2px);
+}
+
 @media (max-width: 768px) {
   .btn-primary, .btn-secondary {
     padding: 14px 24px;

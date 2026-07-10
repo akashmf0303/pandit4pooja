@@ -62,7 +62,7 @@ const PoojaAtHome = () => {
         </h2>
         <div className="service-grid">
           {featuredPoojas.map((pooja) => (
-            <div key={pooja.id} className="pooja-card">
+            <Link key={pooja.id} to={`/poojas/${pooja.id}`} className="pooja-card" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="pooja-image-wrapper">
                 <img src={pooja.image} alt={pooja.title} />
               </div>
@@ -73,11 +73,11 @@ const PoojaAtHome = () => {
                   <span>Starts from</span>
                   <strong>{pooja.price}</strong>
                 </div>
-                <Link to={`/poojas/${pooja.id}`} className="btn-outline">
+                <div className="btn-outline" style={{ textAlign: 'center' }}>
                   View Details
-                </Link>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
